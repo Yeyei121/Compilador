@@ -108,3 +108,26 @@ tokens = (
     'OPEN_TAG',
     'CLOSE_TAG',
 )
+
+# Regular expression rules for simple tokens
+t_PLUS   = r'\+'
+t_MINUS  = r'-'
+t_TIMES  = r'\*'
+t_DIVIDE = r'/'
+t_MODULO = r'%'
+t_EQUAL  = r'='
+t_DISTINT = r'!'
+t_LESS   = r'<'
+t_GREATER = r'>'
+t_SEMICOLON = r';'
+t_COMMA  = r','
+t_LPAREN = r'\('
+t_RPAREN  = r'\)'
+t_LBRACKET = r'\['
+t_RBRACKET = r'\]'
+t_LBLOCK   = r'\{'
+t_RBLOCK   = r'\}'
+t_COLON   = r':'
+t_DOT = r'\.'
+t_AT = r'@'
+t_QUESTIONMARK = r'\?'
