@@ -425,3 +425,79 @@ def t_DOUBLECOLON(t):
 def t_DOTEQUAL(t):
     r'\.='
     return t
+
+# String literals (double and single quoted)
+def t_STRING(t):
+    r'\"([^\\\"]|\\.)*\"|\'([^\\\']|\\.)*\''
+    return t
+
+# Variables in PHP start with $
+def t_VARIABLE(t):
+    r'\$[a-zA-Z_][a-zA-Z_0-9]*'
+    return t
+
+# Dollar sign alone
+def t_DOLLAR(t):
+    r'\$'
+    return t
+
+# Numbers (integers and floats)
+def t_NUMBER(t):
+    r'\d+(\.\d+)?'
+    t.value = float(t.value)
+    return t
+
+# Identifiers
+def t_ID(t):
+    r'[a-zA-Z_][a-zA-Z_0-9]*'
+    return t
+
+# Newlines
+def t_newline(t):
+    r'\n+'
+    t.lexer.lineno += len(t.value)
+
+# Ignored characters (spaces and tabs)
+t_ignore = ' \t'
+
+# Block comments /* ... */
+def t_comments(t):
+    r'/\*(.|[\r\n])*?\*/'
+    t.lexer.lineno += t.value.count('\n')
+
+# Single line comments //
+def t_comments_line(t):
+    r'//(.)*?\n'
+    t.lexer.lineno += 1
+
+# Single line comments #
+def t_comments_hash(t):
+    r'\#(.)*?\n'
+    t.lexer.lineno += 1
+
+# Error handling
+def t_error(t):
+    print ("Lexical error: " + str(t.value[0]))
+    t.lexer.skip(1)
+
+def test(data, lexer):
+    lexer.input(data)
+    while True:
+        tok = lexer.token()
+        if not tok:
+            break
+        print (tok)
+
+lexer = lex.lex()
+
+
+if __name__ == '__main__':
+    if (len(sys.argv) > 1):
+        fin = sys.argv[1]
+    else:
+        fin = 'evaluacion.php'
+    f = open(fin, 'r')
+    data = f.read()
+    print (data)
+    lexer.input(data)
+    test(data, lexer)
