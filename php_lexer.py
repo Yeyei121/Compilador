@@ -332,3 +332,96 @@ def t_GLOBAL(t):
 def t_AS(t):
     r'as'
     return t
+
+# Compound symbols (must be defined before simple ones for priority)
+def t_OPEN_TAG(t):
+    r'<\?php'
+    return t
+
+def t_CLOSE_TAG(t):
+    r'\?>'
+    return t
+
+def t_POWER(t):
+    r'\*\*'
+    return t
+
+def t_IDENTICAL(t):
+    r'==='
+    return t
+
+def t_NOTIDENTICAL(t):
+    r'!=='
+    return t
+
+def t_ISEQUAL(t):
+    r'=='
+    return t
+
+def t_NOTEQUAL(t):
+    r'!='
+    return t
+
+def t_LESSEQUAL(t):
+    r'<='
+    return t
+
+def t_GREATEREQUAL(t):
+    r'>='
+    return t
+
+def t_DEQUAL(t):
+    r'<>'
+    return t
+
+def t_LOGICALAND(t):
+    r'&&'
+    return t
+
+def t_LOGICALOR(t):
+    r'\|\|'
+    return t
+
+def t_PLUSPLUS(t):
+    r'\+\+'
+    return t
+
+def t_PLUSEQUAL(t):
+    r'\+='
+    return t
+
+def t_MINUSMINUS(t):
+    r'--'
+    return t
+
+def t_MINUSEQUAL(t):
+    r'-='
+    return t
+
+def t_TIMESEQUAL(t):
+    r'\*='
+    return t
+
+def t_DIVIDEEQUAL(t):
+    r'/='
+    return t
+
+def t_MODULOEQUAL(t):
+    r'%='
+    return t
+
+def t_ARROW(t):
+    r'->'
+    return t
+
+def t_DOUBLEARROW(t):
+    r'=>'
+    return t
+
+def t_DOUBLECOLON(t):
+    r'::'
+    return t
+
+def t_DOTEQUAL(t):
+    r'\.='
+    return t
