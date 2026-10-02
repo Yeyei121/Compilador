@@ -5,6 +5,7 @@ $nombre = "Hola Mundo";
 $edad = 25;
 $precio = 99.99;
 $activo = true;
+$constante = 2.28E-10
 
 // Estructura if-elseif-else
 if ($edad >= 18) {
@@ -105,6 +106,11 @@ Persona::crear("Juan");
 // Variable global y constante
 global $config;
 const MAX_SIZE = 100;
+
+// Errores lexicos
+$precio = 50 ¿;
+$correo = usuario¡dominio.com;
+$mensaje = "cadena sin cerrar;
 
 // Exit
 exit;
