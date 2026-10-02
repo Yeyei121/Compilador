@@ -2,6 +2,8 @@ import ply.lex as lex
 import sys
 import re
 
+# Código desarrollado con ayuda de Claude
+
 # lista de tokens
 tokens = (
     # Reserved words
@@ -452,12 +454,15 @@ def t_VARIABLE(t):
     return t
 
 def t_DOLLAR(t):
-    r'\$'
+    r'\$(?=[\$\{])'
     return t
 
 def t_NUMBER(t):
-    r'\d+(\.\d+)?([eE][+-]?\d+)?'
-    if '.' in t.value or 'e' in t.value or 'E' in t.value:
+    r'\d+(\.\d+)?([eE][+-]?\d+)?\w*'
+    if not re.fullmatch(r'\d+(\.\d+)?([eE][+-]?\d+)?', t.value):
+        print(f"Lexical error: número mal formado '{t.value}' en línea {t.lineno}")
+        return None
+    if '.' in t.value or 'e' in t.value.lower():
         t.value = float(t.value)
     else:
         t.value = int(t.value)
