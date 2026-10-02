@@ -510,7 +510,7 @@ if __name__ == '__main__':
         fin = sys.argv[1]
     else:
         fin = 'evaluacion.php'
-    f = open(fin, 'r')
+    f = open(fin, 'r', encoding='utf-8')
     data = f.read()
     print(data)
     lexer.input(data)
