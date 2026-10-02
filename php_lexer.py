@@ -509,7 +509,7 @@ if __name__ == '__main__':
     if (len(sys.argv) > 1):
         fin = sys.argv[1]
     else:
-        fin = 'evaluacion.php'
+        fin = 'evaluacion2.php'
     f = open(fin, 'r', encoding='utf-8')
     data = f.read()
     print(data)
