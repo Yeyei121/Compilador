@@ -1,115 +1,26 @@
 import ply.lex as lex
 import sys
+import re
 
-# lista de tokens
 tokens = (
-    # Reserved words
-    'IF',
-    'ELSE',
-    'ELSEIF',
-    'WHILE',
-    'FOR',
-    'FOREACH',
-    'DO',
-    'SWITCH',
-    'CASE',
-    'DEFAULT',
-    'BREAK',
-    'CONTINUE',
-    'RETURN',
-    'FUNCTION',
-    'CLASS',
-    'PUBLIC',
-    'PRIVATE',
-    'PROTECTED',
-    'STATIC',
-    'NEW',
-    'ECHO',
-    'PRINT',
-    'ARRAY',
-    'NULL',
-    'TRUE',
-    'FALSE',
-    'AND',
-    'OR',
-    'NOT',
-    'ISSET',
-    'UNSET',
-    'EMPTY',
-    'DIE',
-    'EXIT',
-    'INCLUDE',
-    'REQUIRE',
-    'INCLUDE_ONCE',
-    'REQUIRE_ONCE',
-    'TRY',
-    'CATCH',
-    'FINALLY',
-    'THROW',
-    'EXTENDS',
-    'IMPLEMENTS',
-    'INTERFACE',
-    'ABSTRACT',
-    'CONST',
-    'VAR',
-    'GLOBAL',
-    'AS',
-
-    # Symbols
-    'PLUS',
-    'PLUSPLUS',
-    'PLUSEQUAL',
-    'MINUS',
-    'MINUSMINUS',
-    'MINUSEQUAL',
-    'TIMES',
-    'TIMESEQUAL',
-    'DIVIDE',
-    'DIVIDEEQUAL',
-    'MODULO',
-    'MODULOEQUAL',
-    'POWER',
-    'LESS',
-    'LESSEQUAL',
-    'GREATER',
-    'GREATEREQUAL',
-    'EQUAL',
-    'DEQUAL',
-    'ISEQUAL',
-    'DISTINT',
-    'NOTEQUAL',
-    'IDENTICAL',
-    'NOTIDENTICAL',
-    'LOGICALAND',
-    'LOGICALOR',
-    'SEMICOLON',
-    'COMMA',
-    'LPAREN',
-    'RPAREN',
-    'LBRACKET',
-    'RBRACKET',
-    'LBLOCK',
-    'RBLOCK',
-    'COLON',
-    'DOT',
-    'DOTEQUAL',
-    'ARROW',
-    'DOUBLECOLON',
-    'DOUBLEARROW',
-    'AT',
-    'DOLLAR',
-    'QUESTIONMARK',
-
-    # Others
-    'VARIABLE',
-    'ID',
-    'NUMBER',
-    'STRING',
-    'OPEN_TAG',
-    'CLOSE_TAG',
+    'IF', 'ELSE', 'ELSEIF', 'WHILE', 'FOR', 'FOREACH', 'DO', 'SWITCH', 'CASE',
+    'DEFAULT', 'BREAK', 'CONTINUE', 'RETURN', 'FUNCTION', 'CLASS', 'PUBLIC',
+    'PRIVATE', 'PROTECTED', 'STATIC', 'NEW', 'ECHO', 'PRINT', 'ARRAY', 'NULL',
+    'TRUE', 'FALSE', 'AND', 'OR', 'NOT', 'ISSET', 'UNSET', 'EMPTY', 'DIE',
+    'EXIT', 'INCLUDE', 'REQUIRE', 'INCLUDE_ONCE', 'REQUIRE_ONCE', 'TRY',
+    'CATCH', 'FINALLY', 'THROW', 'EXTENDS', 'IMPLEMENTS', 'INTERFACE',
+    'ABSTRACT', 'CONST', 'VAR', 'GLOBAL', 'AS', 'INSTANCEOF',
+    'PLUS', 'PLUSPLUS', 'PLUSEQUAL', 'MINUS', 'MINUSMINUS', 'MINUSEQUAL',
+    'TIMES', 'TIMESEQUAL', 'DIVIDE', 'DIVIDEEQUAL', 'MODULO', 'MODULOEQUAL',
+    'POWER', 'LESS', 'LESSEQUAL', 'GREATER', 'GREATEREQUAL', 'EQUAL', 'DEQUAL',
+    'ISEQUAL', 'DISTINT', 'NOTEQUAL', 'IDENTICAL', 'NOTIDENTICAL', 'LOGICALAND',
+    'LOGICALOR', 'BITAND', 'BITOR', 'SPACESHIP', 'NULLCOALESCING', 'SEMICOLON',
+    'COMMA', 'LPAREN', 'RPAREN', 'LBRACKET', 'RBRACKET', 'LBLOCK', 'RBLOCK',
+    'COLON', 'DOT', 'DOTEQUAL', 'ARROW', 'DOUBLECOLON', 'DOUBLEARROW', 'AT',
+    'DOLLAR', 'QUESTIONMARK',
+    'VARIABLE', 'ID', 'NUMBER', 'STRING', 'OPEN_TAG', 'CLOSE_TAG',
 )
 
-# Regular expression rules for simple tokens
 t_PLUS   = r'\+'
 t_MINUS  = r'-'
 t_TIMES  = r'\*'
@@ -131,209 +42,213 @@ t_COLON   = r':'
 t_DOT = r'\.'
 t_AT = r'@'
 t_QUESTIONMARK = r'\?'
+t_BITAND = r'&'
+t_BITOR = r'\|'
 
-# Reserved words - functions
 def t_ELSEIF(t):
-    r'elseif'
+    r'elseif\b'
     return t
 
 def t_ELSE(t):
-    r'else'
+    r'else\b'
     return t
 
 def t_IF(t):
-    r'if'
+    r'if\b'
     return t
 
 def t_WHILE(t):
-    r'while'
+    r'while\b'
     return t
 
 def t_FOREACH(t):
-    r'foreach'
+    r'foreach\b'
     return t
 
 def t_FOR(t):
-    r'for'
+    r'for\b'
     return t
 
 def t_DO(t):
-    r'do'
+    r'do\b'
     return t
 
 def t_SWITCH(t):
-    r'switch'
+    r'switch\b'
     return t
 
 def t_CASE(t):
-    r'case'
+    r'case\b'
     return t
 
 def t_DEFAULT(t):
-    r'default'
+    r'default\b'
     return t
 
 def t_BREAK(t):
-    r'break'
+    r'break\b'
     return t
 
 def t_CONTINUE(t):
-    r'continue'
+    r'continue\b'
     return t
 
 def t_RETURN(t):
-    r'return'
+    r'return\b'
     return t
 
 def t_FUNCTION(t):
-    r'function'
+    r'function\b'
     return t
 
 def t_CLASS(t):
-    r'class'
+    r'class\b'
     return t
 
 def t_PUBLIC(t):
-    r'public'
+    r'public\b'
     return t
 
 def t_PRIVATE(t):
-    r'private'
+    r'private\b'
     return t
 
 def t_PROTECTED(t):
-    r'protected'
+    r'protected\b'
     return t
 
 def t_STATIC(t):
-    r'static'
+    r'static\b'
     return t
 
 def t_NEW(t):
-    r'new'
+    r'new\b'
     return t
 
 def t_ECHO(t):
-    r'echo'
+    r'echo\b'
     return t
 
 def t_PRINT(t):
-    r'print'
+    r'print\b'
     return t
 
 def t_ARRAY(t):
-    r'array'
+    r'array\b'
     return t
 
 def t_NULL(t):
-    r'null'
+    r'null\b'
     return t
 
 def t_TRUE(t):
-    r'true'
+    r'true\b'
     return t
 
 def t_FALSE(t):
-    r'false'
+    r'false\b'
     return t
 
 def t_AND(t):
-    r'and'
+    r'and\b'
     return t
 
 def t_OR(t):
-    r'or'
+    r'or\b'
     return t
 
 def t_NOT(t):
-    r'not'
+    r'not\b'
     return t
 
 def t_ISSET(t):
-    r'isset'
+    r'isset\b'
     return t
 
 def t_UNSET(t):
-    r'unset'
+    r'unset\b'
     return t
 
 def t_EMPTY(t):
-    r'empty'
+    r'empty\b'
     return t
 
 def t_DIE(t):
-    r'die'
+    r'die\b'
     return t
 
 def t_EXIT(t):
-    r'exit'
+    r'exit\b'
     return t
 
 def t_INCLUDE_ONCE(t):
-    r'include_once'
+    r'include_once\b'
     return t
 
 def t_INCLUDE(t):
-    r'include'
+    r'include\b'
     return t
 
 def t_REQUIRE_ONCE(t):
-    r'require_once'
+    r'require_once\b'
     return t
 
 def t_REQUIRE(t):
-    r'require'
+    r'require\b'
     return t
 
 def t_TRY(t):
-    r'try'
+    r'try\b'
     return t
 
 def t_CATCH(t):
-    r'catch'
+    r'catch\b'
     return t
 
 def t_FINALLY(t):
-    r'finally'
+    r'finally\b'
     return t
 
 def t_THROW(t):
-    r'throw'
+    r'throw\b'
     return t
 
 def t_EXTENDS(t):
-    r'extends'
+    r'extends\b'
     return t
 
 def t_IMPLEMENTS(t):
-    r'implements'
+    r'implements\b'
     return t
 
 def t_INTERFACE(t):
-    r'interface'
+    r'interface\b'
     return t
 
 def t_ABSTRACT(t):
-    r'abstract'
+    r'abstract\b'
     return t
 
 def t_CONST(t):
-    r'const'
+    r'const\b'
     return t
 
 def t_VAR(t):
-    r'var'
+    r'var\b'
     return t
 
 def t_GLOBAL(t):
-    r'global'
+    r'global\b'
     return t
 
 def t_AS(t):
-    r'as'
+    r'as\b'
     return t
 
-# Compound symbols (must be defined before simple ones for priority)
+def t_INSTANCEOF(t):
+    r'instanceof\b'
+    return t
+
 def t_OPEN_TAG(t):
     r'<\?php'
     return t
@@ -342,8 +257,8 @@ def t_CLOSE_TAG(t):
     r'\?>'
     return t
 
-def t_POWER(t):
-    r'\*\*'
+def t_SPACESHIP(t):
+    r'<=>'
     return t
 
 def t_IDENTICAL(t):
@@ -380,6 +295,14 @@ def t_LOGICALAND(t):
 
 def t_LOGICALOR(t):
     r'\|\|'
+    return t
+
+def t_NULLCOALESCING(t):
+    r'\?\?'
+    return t
+
+def t_POWER(t):
+    r'\*\*'
     return t
 
 def t_PLUSPLUS(t):
@@ -426,58 +349,51 @@ def t_DOTEQUAL(t):
     r'\.='
     return t
 
-# String literals (double and single quoted)
 def t_STRING(t):
     r'\"([^\\\"]|\\.)*\"|\'([^\\\']|\\.)*\''
     return t
 
-# Variables in PHP start with $
 def t_VARIABLE(t):
     r'\$[a-zA-Z_][a-zA-Z_0-9]*'
     return t
 
-# Dollar sign alone
 def t_DOLLAR(t):
     r'\$'
     return t
 
-# Numbers (integers and floats)
 def t_NUMBER(t):
-    r'\d+(\.\d+)?'
-    t.value = float(t.value)
+    r'\d+(\.\d+)?([eE][+-]?\d+)?'
+    if '.' in t.value or 'e' in t.value or 'E' in t.value:
+        t.value = float(t.value)
+    else:
+        t.value = int(t.value)
     return t
 
-# Identifiers
 def t_ID(t):
     r'[a-zA-Z_][a-zA-Z_0-9]*'
     return t
 
-# Newlines
 def t_newline(t):
     r'\n+'
     t.lexer.lineno += len(t.value)
 
-# Ignored characters (spaces and tabs)
 t_ignore = ' \t'
 
-# Block comments /* ... */
 def t_comments(t):
     r'/\*(.|[\r\n])*?\*/'
     t.lexer.lineno += t.value.count('\n')
+    pass
 
-# Single line comments //
 def t_comments_line(t):
-    r'//(.)*?\n'
-    t.lexer.lineno += 1
+    r'//[^\n]*'
+    pass
 
-# Single line comments #
 def t_comments_hash(t):
-    r'\#(.)*?\n'
-    t.lexer.lineno += 1
+    r'\#[^\n]*'
+    pass
 
-# Error handling
 def t_error(t):
-    print ("Lexical error: " + str(t.value[0]))
+    print("Lexical error: " + str(t.value[0]))
     t.lexer.skip(1)
 
 def test(data, lexer):
@@ -486,10 +402,9 @@ def test(data, lexer):
         tok = lexer.token()
         if not tok:
             break
-        print (tok)
+        print(tok)
 
-lexer = lex.lex()
-
+lexer = lex.lex(reflags=re.IGNORECASE | re.VERBOSE)
 
 if __name__ == '__main__':
     if (len(sys.argv) > 1):
@@ -498,6 +413,6 @@ if __name__ == '__main__':
         fin = 'evaluacion.php'
     f = open(fin, 'r')
     data = f.read()
-    print (data)
+    print(data)
     lexer.input(data)
     test(data, lexer)
