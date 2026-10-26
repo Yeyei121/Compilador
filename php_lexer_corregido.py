@@ -107,6 +107,7 @@ tokens = (
     'AT',
     'DOLLAR',
     'QUESTIONMARK',
+    'CAST',
 
     # Others
     'VARIABLE',
@@ -445,8 +446,13 @@ def t_DOTEQUAL(t):
     r'\.='
     return t
 
+def t_CAST(t):
+    r'\(\s*(int|integer|float|double|string|bool|boolean|array|object)\s*\)'
+    return t
+
 def t_STRING(t):
     r'\"([^\\\"]|\\.)*\"|\'([^\\\']|\\.)*\''
+    t.lexer.lineno += t.value.count('\n')
     return t
 
 def t_VARIABLE(t):
@@ -461,6 +467,7 @@ def t_NUMBER(t):
     r'\d+(\.\d+)?([eE][+-]?\d+)?\w*'
     if not re.fullmatch(r'\d+(\.\d+)?([eE][+-]?\d+)?', t.value):
         print(f"Lexical error: número mal formado '{t.value}' en línea {t.lineno}")
+        t.lexer.errores_lexicos += 1
         return None
     if '.' in t.value or 'e' in t.value.lower():
         t.value = float(t.value)
@@ -492,7 +499,8 @@ def t_comments_hash(t):
     pass
 
 def t_error(t):
-    print("Lexical error: " + str(t.value[0]))
+    print(f"Lexical error: caracter ilegal '{t.value[0]}' en línea {t.lineno}")
+    t.lexer.errores_lexicos += 1
     t.lexer.skip(1)
 
 def test(data, lexer):
@@ -504,6 +512,7 @@ def test(data, lexer):
         print(tok)
 
 lexer = lex.lex(reflags=re.IGNORECASE | re.VERBOSE)
+lexer.errores_lexicos = 0
 
 if __name__ == '__main__':
     if (len(sys.argv) > 1):
